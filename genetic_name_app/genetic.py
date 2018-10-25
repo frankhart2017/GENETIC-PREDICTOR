@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 
 POPULATION_SIZE = 100
 
@@ -101,4 +102,4 @@ def main():
           "".join(population[0].chromosome), len(TARGET) - population[0].fitness))
     vals.append("".join(population[0].chromosome))
 
-    return vals
+    return pd.unique(vals).tolist()
