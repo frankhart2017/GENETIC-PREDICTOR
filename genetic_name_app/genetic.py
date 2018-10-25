@@ -5,97 +5,100 @@ POPULATION_SIZE = 100
 GENES = '''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP
 QRSTUVWXYZ 1234567890, .-;:_!"#%&/()=?@${[]}'''
 
-def driver(TARGET):
+TARGET = ""
 
-    class Individual(object):
+def predict(target):
+    global TARGET
+    TARGET = target
+    a = main()
+    return a
 
-    	def __init__(self, chromosome):
-    		self.chromosome = chromosome
-    		self.fitness = self.cal_fitness()
+class Individual(object):
 
-    	@classmethod
-    	def mutated_genes(self):
-    		global GENES
-    		gene = random.choice(GENES)
-    		return gene
+	def __init__(self, chromosome):
+		self.chromosome = chromosome
+		self.fitness = self.cal_fitness()
 
-    	@classmethod
-    	def create_gnome(self):
-    		global TARGET
-    		gnome_len = len(TARGET)
-    		return [self.mutated_genes() for _ in range(gnome_len)]
+	@classmethod
+	def mutated_genes(self):
+		global GENES
+		gene = random.choice(GENES)
+		return gene
 
-    	def mate(self, par2):
-    		child_chromosome = []
-    		for gp1, gp2 in zip(self.chromosome, par2.chromosome):
+	@classmethod
+	def create_gnome(self):
+		global TARGET
+		gnome_len = len(TARGET)
+		return [self.mutated_genes() for _ in range(gnome_len)]
 
-    			prob = random.random()
+	def mate(self, par2):
+		child_chromosome = []
+		for gp1, gp2 in zip(self.chromosome, par2.chromosome):
 
-    			if prob < 0.45:
-    				child_chromosome.append(gp1)
+			prob = random.random()
 
-    			elif prob < 0.90:
-    				child_chromosome.append(gp2)
+			if prob < 0.45:
+				child_chromosome.append(gp1)
 
-    			else:
-    				child_chromosome.append(self.mutated_genes())
+			elif prob < 0.90:
+				child_chromosome.append(gp2)
 
-    		return Individual(child_chromosome)
+			else:
+				child_chromosome.append(self.mutated_genes())
 
-    	def cal_fitness(self):
-    		global TARGET
-    		fitness = 0
-    		for gs, gt in zip(self.chromosome, TARGET):
-    			if gs != gt: fitness+= 1
-    		return fitness
+		return Individual(child_chromosome)
 
-    def main():
-        global POPULATION_SIZE
+	def cal_fitness(self):
+		global TARGET
+		fitness = 0
+		for gs, gt in zip(self.chromosome, TARGET):
+			if gs != gt: fitness+= 1
+		return fitness
 
-        generation = 1
+def main():
+    global POPULATION_SIZE
 
-        found = False
-        population = []
+    generation = 1
 
-        for _ in range(POPULATION_SIZE):
-            gnome = Individual.create_gnome()
-            population.append(Individual(gnome))
+    found = False
+    population = []
 
-        while not found:
-            population = sorted(population, key=lambda x:x.fitness)
+    for _ in range(POPULATION_SIZE):
+        gnome = Individual.create_gnome()
+        population.append(Individual(gnome))
 
-            if population[0].fitness <= 0:
-                found = True
-                break
+    vals = []
 
-            new_generation = []
+    while not found:
+        population = sorted(population, key=lambda x:x.fitness)
 
-            s = int((10*POPULATION_SIZE)/100)
-            new_generation.extend(population[:s])
+        if population[0].fitness <= 0:
+            found = True
+            break
 
-            s = int((90*POPULATION_SIZE)/100)
-            for _ in range(s):
-                parent1 = random.choice(population[:50])
-                parent2 = random.choice(population[:50])
-                child = parent1.mate(parent2)
-                new_generation.append(child)
+        new_generation = []
 
-            population = new_generation
+        s = int((10*POPULATION_SIZE)/100)
+        new_generation.extend(population[:s])
 
-            print("Generation: {}\tString: {}\tFitness: {}".format(generation,
-                  "".join(population[0].chromosome), len(TARGET) - population[0].fitness))
+        s = int((90*POPULATION_SIZE)/100)
+        for _ in range(s):
+            parent1 = random.choice(population[:50])
+            parent2 = random.choice(population[:50])
+            child = parent1.mate(parent2)
+            new_generation.append(child)
 
-            generation += 1
+        population = new_generation
 
         print("Generation: {}\tString: {}\tFitness: {}".format(generation,
               "".join(population[0].chromosome), len(TARGET) - population[0].fitness))
 
-        return population
+        vals.append("".join(population[0].chromosome))
 
-    ret = main()
-    return ret
+        generation += 1
 
-def predict(target):
-    as = driver(target)
-    as = ["".join(a.chromosome) for a in as]
-    return as
+    print("Generation: {}\tString: {}\tFitness: {}".format(generation,
+          "".join(population[0].chromosome), len(TARGET) - population[0].fitness))
+    vals.append("".join(population[0].chromosome))
+
+    return vals
