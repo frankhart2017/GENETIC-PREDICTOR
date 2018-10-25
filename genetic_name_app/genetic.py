@@ -95,4 +95,4 @@ def driver(TARGET):
 def predict(target):
     as = driver(target)
     as = ["".join(a.chromosome) for a in as]
-    return a
+    return as
