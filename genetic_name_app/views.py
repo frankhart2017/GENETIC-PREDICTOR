@@ -6,5 +6,4 @@ from genetic_name_app.genetic import predict
 def index(request):
     target = request.GET['s']
     prediction = predict(target)
-    names = [prediction[i][0] for i in range(len(prediction))]
-    return JsonResponse({'predictions': names})
+    return JsonResponse({'predictions': prediction})
