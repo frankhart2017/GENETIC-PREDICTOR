@@ -25,7 +25,7 @@ SECRET_KEY = '5(u(t%p@-$z^pm_5xz3wg!j3hhn7u0qj0x^r8mh)go%0#-%_ef'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['genetic-prediction.herokuapp.com']
 
 
 # Application definition
