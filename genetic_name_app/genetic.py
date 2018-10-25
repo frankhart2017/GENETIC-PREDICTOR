@@ -92,6 +92,9 @@ def driver(TARGET):
 
         return population
 
+    ret = main()
+    return ret
+
 def predict(target):
     as = driver(target)
     as = ["".join(a.chromosome) for a in as]
